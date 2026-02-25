@@ -1,0 +1,693 @@
+.license-search-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  background: #f5f5f5;
+  min-height: 100vh;
+
+  // Header
+  .search-header {
+    text-align: center;
+    margin-bottom: 2rem;
+
+    h1 {
+      margin: 0 0 0.5rem 0;
+      color: #333;
+      font-size: 2rem;
+    }
+
+    p {
+      margin: 0;
+      color: #999;
+      font-size: 1rem;
+    }
+  }
+
+
+
+  .search-bar {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    justify-content: center;
+    flex-wrap: wrap;
+
+    .search-field {
+      width: 100%;
+      max-width: 500px;
+    }
+
+    .filter-button {
+      white-space: nowrap;
+      padding: 0.7rem 1.5rem !important;
+    }
+  }
+
+  // Advanced Filter Panel
+  .filter-panel {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+
+    .filter-section {
+      margin-bottom: 1.5rem;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      h4 {
+        margin: 0 0 0.75rem 0;
+        color: #333;
+        font-size: 0.95rem;
+        font-weight: 600;
+      }
+
+      .date-range {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+
+        .date-input {
+          flex: 1;
+          padding: 0.6rem;
+          border: 1px solid #ddd;
+          border-radius: 4px;
+          font-size: 0.9rem;
+
+          &:focus {
+            outline: none;
+            border-color: #1976d2;
+            box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.1);
+          }
+        }
+
+        span {
+          color: #999;
+          font-weight: 600;
+        }
+      }
+
+      .text-input {
+        width: 100%;
+        padding: 0.6rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 0.9rem;
+        font-family: inherit;
+
+        &:focus {
+          outline: none;
+          border-color: #1976d2;
+          box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.1);
+        }
+      }
+
+      // Select dropdown styling
+      select {
+        width: 100%;
+        padding: 0.6rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 0.9rem;
+        background-color: white;
+        font-family: inherit;
+        cursor: pointer;
+
+        &:focus {
+          outline: none;
+          border-color: #1976d2;
+          box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.1);
+        }
+
+        &:hover {
+          border-color: #bbb;
+        }
+      }
+
+      .quick-filters {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .filter-checkbox {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        cursor: pointer;
+        font-size: 0.9rem;
+        color: #333;
+
+        input[type="checkbox"] {
+          cursor: pointer;
+          width: 18px;
+          height: 18px;
+        }
+
+        &:hover {
+          color: #1976d2;
+        }
+      }
+
+      .feature-selector {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+      }
+
+      .feature-chip {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 0.75rem;
+        background: #f5f5f5;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        transition: all 0.2s;
+
+        &:hover {
+          background: #eee;
+          border-color: #1976d2;
+        }
+
+        input[type="checkbox"] {
+          cursor: pointer;
+          width: 16px;
+          height: 16px;
+        }
+
+        &:has(input:checked) {
+          background: #e3f2fd;
+          border-color: #1976d2;
+          color: #1976d2;
+          font-weight: 600;
+        }
+      }
+    }
+
+    .clear-btn {
+      width: 100%;
+      margin-top: 1rem;
+      color: #d32f2f !important;
+      border-color: #d32f2f !important;
+
+      &:hover {
+        background: rgba(211, 47, 47, 0.04) !important;
+      }
+    }
+  }
+
+  .filter-categories {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+    justify-content: center;
+    padding-bottom: 1rem;
+
+    button {
+      color: #666 !important;
+      border-bottom: 2px solid transparent !important;
+      border-radius: 0 !important;
+      transition: all 0.2s !important;
+      cursor: pointer !important;
+      min-height: auto !important;
+      min-width: auto !important;
+      box-shadow: none !important;
+      text-transform: none !important;
+
+      &:hover {
+        background-color: transparent !important;
+        color: #1976d2 !important;
+        border-bottom-color: #1976d2 !important;
+      }
+
+      &.active {
+        color: #1976d2 !important;
+        border-bottom-color: #1976d2 !important;
+      }
+
+      &:focus {
+        outline: none !important;
+        box-shadow: none !important;
+      }
+    }
+  }
+
+  .loading-spinner {
+    text-align: center;
+    padding: 2rem;
+
+    mat-spinner {
+      margin: 0 auto;
+    }
+  }
+
+  .results-container {
+    .results-count {
+      text-align: center;
+      margin-bottom: 2rem;
+      font-size: 1rem;
+      color: #666;
+
+      strong {
+        color: #1976d2;
+        font-weight: 600;
+      }
+
+      .pagination-info {
+        font-size: 0.9rem;
+        color: #999;
+        margin-left: 0.5rem;
+      }
+    }
+
+    // Pagination Controls
+    .pagination-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+      padding: 1rem;
+      background: white;
+      border-radius: 4px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+      flex-wrap: wrap;
+
+      .page-size-selector {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+
+        label {
+          font-weight: 500;
+          font-size: 0.95rem;
+          color: #333;
+        }
+
+        .page-size-input {
+          padding: 0.5rem 0.75rem;
+          border: 1px solid #ddd;
+          border-radius: 4px;
+          font-size: 0.9rem;
+          background-color: white;
+          cursor: pointer;
+
+          &:focus {
+            outline: none;
+            border-color: #1976d2;
+            box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.1);
+          }
+
+          &:hover {
+            border-color: #bbb;
+          }
+        }
+      }
+
+      .pagination-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 0.25rem;
+        flex: 1 1 auto;
+        min-width: 300px;
+
+        .pagination-btn {
+          min-width: 40px;
+          padding: 0 !important;
+
+          &:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+          }
+        }
+
+        .page-number-btn {
+          min-width: 36px;
+          padding: 0.4rem 0.5rem !important;
+          margin: 0 2px;
+          font-weight: 500;
+
+          &.active {
+            background-color: #1976d2 !important;
+            color: white !important;
+            border-color: #1976d2 !important;
+          }
+
+          &:hover:not(.active) {
+            background-color: #f0f0f0 !important;
+          }
+        }
+      }
+
+      .pagination-info-text {
+        font-size: 0.9rem;
+        color: #999;
+        font-weight: 500;
+        text-align: right;
+        flex: 0 0 auto;
+      }
+    }
+
+    .pagination-controls-bottom {
+      margin-top: 2rem;
+      margin-bottom: 0;
+    }
+
+    .no-results {
+      text-align: center;
+      padding: 2rem 1rem;
+      background: white;
+      border-radius: 4px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+
+      mat-icon {
+        font-size: 3rem;
+        color: #ccc;
+        margin-bottom: 0.5rem;
+      }
+
+      p {
+        color: #999;
+        margin: 0;
+      }
+    }
+
+    .license-card {
+      margin-bottom: 1.5rem;
+      background: white;
+      border-radius: 4px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+      transition: box-shadow 0.2s;
+
+      &:hover {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+      }
+
+      mat-card-header {
+        margin-bottom: 1rem;
+      }
+
+      .card-title-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 1rem;
+
+        .card-title-col {
+          flex: 1;
+
+          .license-id {
+            margin: 0 0 0.2rem 0;
+            color: #1a237e;
+            font-size: 1.2rem;
+            font-weight: 600;
+            font-family: monospace;
+          }
+
+          .license-product {
+            margin: 0 0 0.2rem 0;
+            color: #333;
+            font-size: 1rem;
+            font-weight: 500;
+          }
+
+          .license-family {
+            margin: 0;
+            color: #999;
+            font-size: 0.9rem;
+          }
+        }
+
+        .status-badge {
+          padding: 0.4rem 0.8rem;
+          border-radius: 12px;
+          font-size: 0.8rem;
+          font-weight: 600;
+          white-space: nowrap;
+
+          // Status CSS classes from documentation
+          &.license-status {
+            &.active {
+              background: #d4edda;
+              color: #155724;
+            }
+
+            &.expired {
+              background: #f8d7da;
+              color: #721c24;
+            }
+
+            &.revoked {
+              background: #f5c6cb;
+              color: #721c24;
+            }
+
+            &.suspended {
+              background: #fff3cd;
+              color: #856404;
+            }
+          }
+        }
+      }
+
+      mat-card-content {
+        .license-info-row {
+          display: flex;
+          justify-content: space-between;
+          padding: 0.6rem 0;
+          border-bottom: 1px solid #f5f5f5;
+
+          &:last-of-type {
+            border-bottom: none;
+          }
+
+          .label {
+            font-weight: 600;
+            color: #666;
+            min-width: 110px;
+          }
+
+          .value {
+            color: #333;
+            text-align: right;
+            flex: 1;
+
+            &.expired {
+              color: #c62828;
+              font-weight: 600;
+            }
+          }
+        }
+
+        .features-section {
+          margin-top: 1rem;
+          padding-top: 1rem;
+          border-top: 1px solid #f5f5f5;
+
+          .features-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            width: 100%;
+            justify-content: flex-start;
+            color: #1976d2 !important;
+            padding: 0.5rem !important;
+            margin: -0.5rem 0 0 -0.75rem !important;
+            font-weight: 600;
+
+            &:hover {
+              background: #f5f5f5;
+            }
+
+            mat-icon {
+              font-size: 1.2rem;
+              width: 1.2rem;
+              height: 1.2rem;
+            }
+          }
+
+          .features-table {
+            margin-top: 1rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+
+            .features-table-header {
+              display: grid;
+              grid-template-columns: 1.2fr 1.5fr 0.8fr;
+              background: #f9f9f9;
+              font-weight: 600;
+              font-size: 0.85rem;
+              color: #666;
+              padding: 0.75rem;
+              border-bottom: 1px solid #e0e0e0;
+
+              & > div {
+                padding: 0 0.5rem;
+              }
+            }
+
+            .features-table-rows {
+              max-height: 300px;
+              overflow-y: auto;
+            }
+
+            .features-table-row {
+              display: grid;
+              grid-template-columns: 1.2fr 1.5fr 0.8fr;
+              padding: 0.75rem;
+              border-bottom: 1px solid #f5f5f5;
+              align-items: center;
+              font-size: 0.9rem;
+
+              &:last-child {
+                border-bottom: none;
+              }
+
+              & > div {
+                padding: 0 0.5rem;
+              }
+
+              .col-name {
+                color: #333;
+                font-weight: 500;
+              }
+
+              .col-desc {
+                color: #999;
+                font-size: 0.85rem;
+              }
+
+              .col-value {
+                text-align: right;
+                color: #666;
+                font-family: monospace;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .license-search-container {
+    padding: 1rem;
+
+    .search-header h1 {
+      font-size: 1.5rem;
+    }
+
+    .search-bar {
+      flex-direction: column;
+
+      .search-field {
+        max-width: 100%;
+      }
+
+      .filter-button {
+        width: 100%;
+      }
+    }
+
+    .filter-panel {
+      padding: 1rem;
+
+      .filter-section {
+        .date-range {
+          flex-direction: column;
+          gap: 0.25rem;
+
+          .date-input {
+            width: 100%;
+          }
+
+          span {
+            display: none;
+          }
+        }
+
+        .feature-selector {
+          gap: 0.5rem;
+        }
+
+        .feature-chip {
+          flex: 0 1 calc(50% - 0.25rem);
+        }
+      }
+
+      .clear-btn {
+        width: 100% !important;
+      }
+    }
+
+    .filter-categories {
+      overflow-x: auto;
+      justify-content: flex-start;
+    }
+
+    .license-card {
+      .card-title-row {
+        flex-direction: column;
+
+        .status-badge {
+          align-self: flex-start;
+          margin-top: 0.5rem;
+        }
+      }
+
+      .license-info-row {
+        flex-direction: column;
+
+        .value {
+          text-align: left;
+          margin-top: 0.2rem;
+        }
+      }
+    }
+
+    .results-container {
+      .pagination-controls {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
+
+        .page-size-selector {
+          width: 100%;
+          justify-content: center;
+        }
+
+        .pagination-buttons {
+          width: 100%;
+          flex-wrap: wrap;
+          min-width: 100%;
+
+          .page-number-btn {
+            min-width: 32px;
+            padding: 0.3rem 0.4rem !important;
+            font-size: 0.85rem;
+            margin: 2px;
+          }
+
+          .pagination-btn {
+            min-width: 36px;
+          }
+        }
+
+        .pagination-info-text {
+          text-align: center;
+          width: 100%;
+        }
+      }
+    }
+  }
+}

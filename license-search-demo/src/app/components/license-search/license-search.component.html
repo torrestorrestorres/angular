@@ -1,0 +1,390 @@
+<div class="license-search-container">
+
+
+  <div class="search-bar">
+    <mat-form-field class="search-field" appearance="outline">
+      <mat-label>Lizenz suchen...</mat-label>
+      <input
+        matInput
+        [formControl]="searchControl"
+        placeholder="z.B. AutoCAD, Microsoft, JWS, ..."
+      />
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="showFilters = !showFilters"
+      class="filter-button"
+    >
+      <mat-icon>{{ showFilters ? 'expand_less' : 'tune' }}</mat-icon>
+      {{ showFilters ? 'Filter einklappen' : 'Erweiterte Filter' }}
+    </button>
+  </div>
+
+  <div class="filter-panel" *ngIf="showFilters">
+    <div class="filter-section">
+      <h4>Erstellungsdatum</h4>
+      <div class="date-range">
+        <input
+          type="date"
+          [(ngModel)]="createdDateFrom"
+          (change)="onDateFilterChange()"
+          class="date-input"
+        />
+        <span>–</span>
+        <input
+          type="date"
+          [(ngModel)]="createdDateTo"
+          (change)="onDateFilterChange()"
+          class="date-input"
+        />
+      </div>
+    </div>
+
+    <div class="filter-section">
+      <h4>Ablauf-Quick-Filter</h4>
+      <div class="quick-filters">
+        <label class="filter-checkbox">
+          <input
+            type="checkbox"
+            [(ngModel)]="quickFilters.expiring7Days"
+            (change)="toggleQuickFilter('expiring7Days')"
+          />
+          Läuft in 7 Tagen ab
+        </label>
+        <label class="filter-checkbox">
+          <input
+            type="checkbox"
+            [(ngModel)]="quickFilters.expiring30Days"
+            (change)="toggleQuickFilter('expiring30Days')"
+          />
+          Läuft in 30 Tagen ab
+        </label>
+        <label class="filter-checkbox">
+          <input
+            type="checkbox"
+            [(ngModel)]="quickFilters.expired"
+            (change)="toggleQuickFilter('expired')"
+          />
+          Bereits abgelaufen
+        </label>
+      </div>
+    </div>
+
+    <div class="filter-section">
+      <h4>Produkt</h4>
+      <select
+        [(ngModel)]="selectedProductId"
+        (change)="onProductFilterChange()"
+        class="text-input"
+      >
+        <option [value]="null">-- Alle Produkte --</option>
+        <option *ngFor="let product of availableProducts" [value]="product.id">
+          {{ product.name }}
+        </option>
+      </select>
+    </div>
+
+    <div class="filter-section">
+      <h4>Produktfamilie</h4>
+      <select
+        [(ngModel)]="selectedProductFamilyId"
+        (change)="onProductFamilyFilterChange()"
+        class="text-input"
+      >
+        <option [value]="null">-- Alle Familien --</option>
+        <option *ngFor="let family of availableProductFamilies" [value]="family.id">
+          {{ family.name }}
+        </option>
+      </select>
+    </div>
+
+    <div class="filter-section">
+      <h4>Lizenztyp</h4>
+      <select
+        [(ngModel)]="selectedLicenseType"
+        (change)="onTypeFilterChange()"
+        class="text-input"
+      >
+        <option [value]="null">-- Alle Typen --</option>
+        <option [value]="TypeEnum.Perpetual">{{ TYPE_MAP[TypeEnum.Perpetual] }}</option>
+        <option [value]="TypeEnum.Fallback">{{ TYPE_MAP[TypeEnum.Fallback] }}</option>
+        <option [value]="TypeEnum.Timed">{{ TYPE_MAP[TypeEnum.Timed] }}</option>
+        <option [value]="TypeEnum.Subscription">{{ TYPE_MAP[TypeEnum.Subscription] }}</option>
+        <option [value]="TypeEnum.Tiered">{{ TYPE_MAP[TypeEnum.Tiered] }}</option>
+        <option [value]="TypeEnum.Freemium">{{ TYPE_MAP[TypeEnum.Freemium] }}</option>
+      </select>
+    </div>
+
+    <div class="filter-section">
+      <h4>Signaturformat</h4>
+      <select
+        [(ngModel)]="selectedSignatureFormat"
+        (change)="onSignatureFormatFilterChange()"
+        class="text-input"
+      >
+        <option [value]="null">-- Alle Formate --</option>
+        <option [value]="SignatureFormatEnum.JWS">JWS (JSON Web Signature)</option>
+        <option [value]="SignatureFormatEnum.JSF">JSF (JSON Signature Format)</option>
+      </select>
+    </div>
+
+    <div class="filter-section">
+      <h4>Features (mit allen erforderlich)</h4>
+      <div class="feature-selector">
+        <label class="feature-chip" *ngFor="let feature of allFeatures">
+          <input
+            type="checkbox"
+            [checked]="isFeatureSelected(feature)"
+            (change)="toggleFeature(feature)"
+          />
+          {{ feature }}
+        </label>
+      </div>
+    </div>
+
+    <button mat-stroked-button (click)="clearFilters()" class="clear-btn">
+      <mat-icon>clear</mat-icon> Alle Filter zurücksetzen
+    </button>
+  </div>
+
+  <div class="filter-categories">
+    <button
+      mat-button
+      [class.active]="activeFilter === null"
+      (click)="filterByStatus(null)"
+      [matBadge]="getResultCount(null)"
+      matBadgeColor="accent"
+      matBadgeSize="small"
+    >
+      Alle
+    </button>
+    <button
+      mat-button
+      [class.active]="activeFilter === StatusEnum.Active"
+      (click)="filterByStatus(StatusEnum.Active)"
+      [matBadge]="getResultCount(StatusEnum.Active)"
+      matBadgeColor="accent"
+      matBadgeSize="small"
+    >
+      {{ getStatusLabel(StatusEnum.Active) }}
+    </button>
+    <button
+      mat-button
+      [class.active]="activeFilter === StatusEnum.Expired"
+      (click)="filterByStatus(StatusEnum.Expired)"
+      [matBadge]="getResultCount(StatusEnum.Expired)"
+      matBadgeColor="warn"
+      matBadgeSize="small"
+    >
+      {{ getStatusLabel(StatusEnum.Expired) }}
+    </button>
+    <button
+      mat-button
+      [class.active]="activeFilter === StatusEnum.Revoked"
+      (click)="filterByStatus(StatusEnum.Revoked)"
+      [matBadge]="getResultCount(StatusEnum.Revoked)"
+      matBadgeColor="warn"
+      matBadgeSize="small"
+    >
+      {{ getStatusLabel(StatusEnum.Revoked) }}
+    </button>
+    <button
+      mat-button
+      [class.active]="activeFilter === StatusEnum.Suspended"
+      (click)="filterByStatus(StatusEnum.Suspended)"
+      [matBadge]="getResultCount(StatusEnum.Suspended)"
+      matBadgeColor="warn"
+      matBadgeSize="small"
+    >
+      {{ getStatusLabel(StatusEnum.Suspended) }}
+    </button>
+  </div>
+
+  <div class="loading-spinner" *ngIf="isLoading">
+    <mat-spinner diameter="40"></mat-spinner>
+  </div>
+
+  <div class="results-container" *ngIf="!isLoading">
+    <div class="results-count">
+      <strong>{{ filteredLicenses.length }}</strong> Ergebnis(se) gefunden
+      <span *ngIf="filteredLicenses.length > 0" class="pagination-info">
+        — Seite {{ currentPage }} von {{ getTotalPages() }} ({{ pageSize }} pro Seite)
+      </span>
+    </div>
+
+    <div *ngIf="filteredLicenses.length === 0" class="no-results">
+      <mat-icon>search_off</mat-icon>
+      <p>Keine Lizenzen gefunden. Versuchen Sie eine andere Suche oder andere Filter.</p>
+    </div>
+
+    <div class="pagination-controls" *ngIf="filteredLicenses.length > 0">
+      <div class="page-size-selector">
+        <label>Pro Seite:</label>
+        <select [(ngModel)]="pageSize" (change)="setPageSize(pageSize)" class="page-size-input">
+          <option *ngFor="let size of pageSizeOptions" [value]="size">{{ size }}</option>
+        </select>
+      </div>
+
+      <div class="pagination-buttons">
+        <button
+          mat-icon-button
+          [disabled]="!canGoPrevious()"
+          (click)="goToPreviousPage()"
+          class="pagination-btn"
+          matTooltip="Zur vorherigen Seite"
+        >
+          <mat-icon>navigate_before</mat-icon>
+        </button>
+
+        <button
+          mat-stroked-button
+          *ngFor="let page of getPageNumbers()"
+          [disabled]="currentPage === page"
+          (click)="goToPage(page)"
+          class="page-number-btn"
+          [class.active]="currentPage === page"
+        >
+          {{ page }}
+        </button>
+
+        <button
+          mat-icon-button
+          [disabled]="!canGoNext()"
+          (click)="goToNextPage()"
+          class="pagination-btn"
+          matTooltip="Zur nächsten Seite"
+        >
+          <mat-icon>navigate_next</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <mat-card *ngFor="let license of paginatedLicenses" class="license-card">
+      <mat-card-header>
+        <div class="card-title-row">
+          <div class="card-title-col">
+            <h3 class="license-id">#{{ license.id }}</h3>
+            <p class="license-product">{{ license.productName }}</p>
+            <p class="license-family" *ngIf="license.productFamilyName">{{ license.productFamilyName }}</p>
+          </div>
+          <div class="status-badge" [ngClass]="'license-status ' + getStatusCssClass(license.status)">
+            {{ getStatusLabel(license.status) }}
+          </div>
+        </div>
+      </mat-card-header>
+
+      <mat-card-content>
+        <div class="license-info-row">
+          <span class="label">Lizenztyp:</span>
+          <span class="value">{{ getTypeLabel(license.type) }}</span>
+        </div>
+        <div class="license-info-row">
+          <span class="label">Tier:</span>
+          <span class="value">{{ license.tier }}</span>
+        </div>
+
+        <div class="license-info-row">
+          <span class="label">Erstellt:</span>
+          <span class="value">{{ formatDate(license.createdAt) }}</span>
+        </div>
+        <div class="license-info-row">
+          <span class="label">Ablauf:</span>
+          <span class="value" [class.expired]="license.status === StatusEnum.Expired || license.status === StatusEnum.Revoked">
+            {{ formatDate(license.expiresAt) }}
+          </span>
+        </div>
+
+        <div class="license-info-row">
+          <span class="label">Signaturformat:</span>
+          <span class="value">{{ license.signatureFormat }}</span>
+        </div>
+        <div class="license-info-row">
+          <span class="label">Dateigröße:</span>
+          <span class="value">{{ license.fileSize }} bytes</span>
+        </div>
+
+        <div class="features-section" *ngIf="license.features.length > 0">
+          <button 
+            mat-button 
+            class="features-toggle"
+            (click)="toggleFeatures(license.id)"
+          >
+            <mat-icon>{{ isFeaturesExpanded(license.id) ? 'expand_less' : 'expand_more' }}</mat-icon>
+            Features ({{ license.features.length }})
+          </button>
+
+          <div class="features-table" *ngIf="isFeaturesExpanded(license.id)">
+            <div class="features-table-header">
+              <div class="col-name">Feature</div>
+              <div class="col-desc">Beschreibung</div>
+              <div class="col-value">Wert</div>
+            </div>
+            <div class="features-table-rows">
+              <div class="features-table-row" *ngFor="let feature of license.features">
+                <div class="col-name">{{ feature.feature.name }}</div>
+                <div class="col-desc">{{ feature.feature.description }}</div>
+                <div class="col-value">
+                  <ng-container *ngIf="feature.feature.dataType === 'bool'">
+                    {{ feature.value === 'true' ? '✓ Ja' : '✗ Nein' }}
+                  </ng-container>
+                  <ng-container *ngIf="feature.feature.dataType !== 'bool'">
+                    {{ feature.value }}
+                  </ng-container>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <div class="pagination-controls pagination-controls-bottom" *ngIf="filteredLicenses.length > 0">
+      <div class="page-size-selector">
+        <label>Pro Seite:</label>
+        <select [(ngModel)]="pageSize" (change)="setPageSize(pageSize)" class="page-size-input">
+          <option *ngFor="let size of pageSizeOptions" [value]="size">{{ size }}</option>
+        </select>
+      </div>
+
+      <div class="pagination-buttons">
+        <button
+          mat-icon-button
+          [disabled]="!canGoPrevious()"
+          (click)="goToPreviousPage()"
+          class="pagination-btn"
+          matTooltip="Zur vorherigen Seite"
+        >
+          <mat-icon>navigate_before</mat-icon>
+        </button>
+
+        <button
+          mat-stroked-button
+          *ngFor="let page of getPageNumbers()"
+          [disabled]="currentPage === page"
+          (click)="goToPage(page)"
+          class="page-number-btn"
+          [class.active]="currentPage === page"
+        >
+          {{ page }}
+        </button>
+
+        <button
+          mat-icon-button
+          [disabled]="!canGoNext()"
+          (click)="goToNextPage()"
+          class="pagination-btn"
+          matTooltip="Zur nächsten Seite"
+        >
+          <mat-icon>navigate_next</mat-icon>
+        </button>
+      </div>
+
+      <div class="pagination-info-text">
+        Seite {{ currentPage }} von {{ getTotalPages() }}
+      </div>
+    </div>
+  </div>
+</div>
