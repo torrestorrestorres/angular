@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { LicenseSearchComponent } from './components/license-search/license-search.component';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-root',
-  imports: [LicenseSearchComponent],
+  imports: [RouterModule],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })

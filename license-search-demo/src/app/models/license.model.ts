@@ -58,3 +58,30 @@ export interface SearchFiltersDto {
   createdAfter?: Date | null;
   createdBefore?: Date | null;
 }
+
+export interface ProductFamily {
+  id: string;
+  name: string;
+  description: string;
+}
+
+export interface Product {
+  id: string;
+  name: string;
+  description: string;
+  familyId?: string;
+  familyName?: string;
+}
+
+export interface CreateLicenseCommand {
+  productId: string;
+  productName: string;
+  productFamilyId?: string | null;
+  productFamilyName: string;
+  type: LicenseType;
+  status: StoredLicenseStatus;
+  signatureFormat: SignatureFormat;
+  tier: string;
+  expiresAt?: Date | null;
+  features: Array<{ featureId: string; value: string }>;
+}

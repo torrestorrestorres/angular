@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { License, LicenseType, StoredLicenseStatus, SignatureFormat, SearchFiltersDto } from '../models/license.model';
+import { License, LicenseType, StoredLicenseStatus, SignatureFormat, SearchFiltersDto, CreateLicenseCommand } from '../models/license.model';
 
 @Injectable({
   providedIn: 'root'
@@ -199,5 +199,44 @@ export class LicenseService {
       });
     });
     return Array.from(features).sort();
+  }
+
+  /**
+   * Create a new license
+   * Simulates backend POST /api/licenses call
+   */
+  createLicense(command: CreateLicenseCommand): Observable<License> {
+    // Simulate some processing delay
+    const newId = Math.max(...this.licenses.map(l => l.id), 0) + 1;
+    
+    const newLicense: License = {
+      id: newId,
+      productId: command.productId,
+      productName: command.productName,
+      productFamilyId: command.productFamilyId || null,
+      productFamilyName: command.productFamilyName,
+      type: command.type,
+      signatureFormat: command.signatureFormat,
+      status: command.status,
+      createdAt: new Date(),
+      expiresAt: command.expiresAt || null,
+      fileSize: Math.floor(Math.random() * 8000) + 256,
+      tier: command.tier,
+      features: command.features.map((feat, idx) => ({
+        id: `${newId}-${idx}`,
+        value: feat.value,
+        feature: {
+          id: feat.featureId,
+          name: `Feature ${idx + 1}`,
+          dataType: 'string' as const,
+          description: `Auto-generated feature ${idx + 1}`
+        }
+      }))
+    };
+
+    // Add to in-memory list (simulating database insert)
+    this.licenses.push(newLicense);
+
+    return of(newLicense);
   }
 }

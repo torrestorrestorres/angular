@@ -33,7 +33,7 @@
           (change)="onDateFilterChange()"
           class="date-input"
         />
-        <span>–</span>
+        <span>-</span>
         <input
           type="date"
           [(ngModel)]="createdDateTo"
@@ -241,6 +241,7 @@
 
         <button
           mat-stroked-button
+          color="primary"
           *ngFor="let page of getPageNumbers()"
           [disabled]="currentPage === page"
           (click)="goToPage(page)"
@@ -362,6 +363,7 @@
 
         <button
           mat-stroked-button
+          color="primary"
           *ngFor="let page of getPageNumbers()"
           [disabled]="currentPage === page"
           (click)="goToPage(page)"

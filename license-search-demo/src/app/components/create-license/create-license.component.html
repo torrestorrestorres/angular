@@ -1,0 +1,144 @@
+<div class="create-license-container">
+  <div class="form-header">
+    <h1>Create New License</h1>
+    <p>Add a new license to your system</p>
+  </div>
+
+  <!-- Success/Error Messages -->
+  <div *ngIf="successMessage" class="success-message">
+    <mat-icon>check_circle</mat-icon>
+    <span>{{ successMessage }}</span>
+  </div>
+  <div *ngIf="errorMessage" class="error-message">
+    <mat-icon>error</mat-icon>
+    <span>{{ errorMessage }}</span>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <mat-card>
+      <!-- Product Section -->
+      <section class="form-section">
+        <h3>Product Information</h3>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Product *</mat-label>
+          <mat-select formControlName="productId">
+            <mat-option *ngFor="let product of products" [value]="product.id">
+              {{ product.name }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="form.get('productId')?.hasError('required')">
+            Product is required
+          </mat-error>
+        </mat-form-field>
+
+        <div *ngIf="getSelectedProduct()" class="product-info">
+          <div class="info-row">
+            <span class="label">Family:</span>
+            <span class="value">{{ getSelectedProduct()?.familyName || 'None' }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Description:</span>
+            <span class="value">{{ getSelectedProduct()?.description }}</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- License Configuration -->
+      <section class="form-section">
+        <h3>License Configuration</h3>
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>Type *</mat-label>
+            <mat-select formControlName="type">
+              <mat-option *ngFor="let type of licenseTypes" [value]="type.value">
+                {{ type.label }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="form.get('type')?.hasError('required')">
+              License type is required
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>Status *</mat-label>
+            <mat-select formControlName="status">
+              <mat-option *ngFor="let status of licenseStatuses" [value]="status.value">
+                {{ status.label }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="form.get('status')?.hasError('required')">
+              Status is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>Format *</mat-label>
+            <mat-select formControlName="signatureFormat">
+              <mat-option *ngFor="let format of signatureFormats" [value]="format">
+                {{ format }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="form.get('signatureFormat')?.hasError('required')">
+              Signature format is required
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="half-width">
+            <mat-label>Tier *</mat-label>
+            <mat-select formControlName="tier">
+              <mat-option *ngFor="let tier of tiers" [value]="tier">
+                {{ tier }}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="form.get('tier')?.hasError('required')">
+              Tier is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </section>
+
+      <!-- Expiration Section -->
+      <section class="form-section">
+        <h3>License Term</h3>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Expires At</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName="expiresAt" />
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          <mat-hint *ngIf="form.get('type')?.value === 0">Not applicable for Perpetual licenses</mat-hint>
+        </mat-form-field>
+      </section>
+
+      <!-- Features Section -->
+      <section class="form-section" *ngIf="availableFeatures.length > 0">
+        <h3>License Features ({{ availableFeatures.length }})</h3>
+        <div formArrayName="features" class="features-grid">
+          <div *ngFor="let control of featureControls; let i = index" [formGroupName]="i">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>{{ availableFeatures[i].name }}</mat-label>
+              <input matInput formControlName="value" [placeholder]="getFeaturePlaceholder(availableFeatures[i])" />
+              <mat-hint>{{ availableFeatures[i].description }}</mat-hint>
+              <mat-error *ngIf="control.get('value')?.hasError('required')">
+                This field is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+      </section>
+
+      <!-- Actions -->
+      <div class="action-buttons">
+        <button mat-raised-button color="primary" type="submit" [disabled]="isLoading || !form.valid">
+          <mat-icon *ngIf="!isLoading">save</mat-icon>
+          <mat-progress-spinner *ngIf="isLoading" diameter="24" mode="indeterminate"></mat-progress-spinner>
+          {{ isLoading ? 'Creating...' : 'Create License' }}
+        </button>
+        <button mat-stroked-button type="button" (click)="onCancel()" [disabled]="isLoading">
+          Cancel
+        </button>
+      </div>
+    </mat-card>
+  </form>
+</div>

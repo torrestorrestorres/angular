@@ -1,0 +1,43 @@
+// Color Theme Variables
+// Change these values to customize your entire color scheme
+
+// Primary Colors (Buttons, Highlights)
+$primary-color: #d50032;
+$primary-color-light: #d50032;
+$primary-color-dark: #a00028;
+
+// Gradient for Cards and Surfaces
+$gradient-primary: linear-gradient(90deg, rgb(7, 12, 112) 0%, rgb(213, 0, 50) 100%);
+
+// Secondary Colors
+$secondary-color: #ff9800;
+$success-color: #4caf50;
+$error-color: #f44336;
+$warning-color: #ff9800;
+$info-color: #d50032;
+
+// Neutral/Background Colors
+$background-color: #ffffff;       // Main page background
+$surface-color: #ffffff;          // Cards, surfaces
+$border-color: #e0e0e0;           // Borders
+$divider-color: #e0e0e0;          // Dividers
+
+// Text Colors
+$text-primary: #333333;           // Main text
+$text-secondary: #666666;         // Secondary/hint text
+$text-light: #999999;             // Light text
+$text-white: #ffffff;             // White text
+
+// Hover/Interaction Colors
+$hover-overlay: rgba(255, 255, 255, 0.2);
+$active-overlay: rgba(255, 255, 255, 0.3);
+
+// Shadows
+$shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+$shadow-md: 0 4px 8px rgba(0, 0, 0, 0.12);
+$shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.15);
+
+// Transitions
+$transition-fast: 0.2s ease;
+$transition-normal: 0.3s ease;
+$transition-slow: 0.5s ease;
